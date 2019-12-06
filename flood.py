@@ -1,10 +1,3 @@
-"""
-1. Find a seed point (the original port coordinates).
-2. Do an quantitize and fill on the map to detect edges.
-    - This detects points of interest such as terminals and berths.
-3. Put bounding boxes around those POIs and built Rtrees in PostGIS
-"""
-
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFilter
