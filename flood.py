@@ -9,18 +9,24 @@ port_seedpoint_map = (
     ('portsmouth', (1250, 1250)),
     ('southampton', (900, 850)),
     ('panama', (2000, 500)),
+    ('rotherdam', (2000, 1200)),
 )
 
 
 def fill_image(name, seed_point, colors=2):
+    """
+    Process image: quantitize and fill, compute histogram,
+    redo if the image has been filled poorly, e.g. has too much red.
+    Don't go past 9 colour levels for quantitization.
+    """
     print(f'Processing image: {name}')
 
     img = quantize_and_fill(name, seed_point, colors)
     num_px = get_num_pixels(img)
     r_histo = get_r_histo(img)
 
-    if r_histo[-1] / num_px > 0.9:
-        print(f'Redoing with {colors+1} colours...')
+    if (r_histo[-1] / num_px > 0.9) and colors < 9:
+        print(f'Redoing with {colors+1} colors quantization...')
         img = fill_image(name, seed_point, colors=colors+1)
 
     return img
