@@ -1,4 +1,5 @@
 from pathlib import Path
+from subprocess import Popen
 
 from PIL import Image, ImageDraw, ImageFilter
 
@@ -29,8 +30,6 @@ def fill_image(name, seed_point, colors=2):
         print(f'Redoing with {colors+1} colors quantization...')
         img = fill_image(name, seed_point, colors=colors+1)
 
-    img = apply_additional_filters(img)
-
     return img
 
 
@@ -58,12 +57,26 @@ def get_r_histo(img):
     return r_histo
 
 def save_img(img, name):
-    print(f'Saving {name}')
-    img.save(f'output/{name}.png')
+    filename = f'output/{name}.bmp'
+    print(f'Saving {filename}')
+    img.save(filename)
+    return filename
 
+filenames = []
 
 for port in port_seedpoint_map:
-    save_img(fill_image(*port), port[0])
+    img = fill_image(*port)
+    img = apply_additional_filters(img)
+    filenames.append(save_img(img, port[0]))
+
+print(filenames)
+
+for fn in filenames:
+    Popen(('potrace', fn, '-b', 'geojson'))
+
 
 # Do a single image.
 # img = fill_image(*port_seedpoint_map[0])
+# img = apply_additional_filters(img)
+# save_img(img, 'test')
+# img.show()

@@ -15,3 +15,11 @@
   redo if the image has been filled poorly, e.g. has too much red.
 - Don't go past 9 colour levels for quantitization.
 - Apply additional filters if necessary.
+
+
+## Potrace
+
+    potrace felixstowe.bmp -b geojson
+
+
+From the SeedPoint determine the origin of the map (x0, y0 coordinates).
