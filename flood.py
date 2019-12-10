@@ -29,6 +29,8 @@ def fill_image(name, seed_point, colors=2):
         print(f'Redoing with {colors+1} colors quantization...')
         img = fill_image(name, seed_point, colors=colors+1)
 
+    img = apply_additional_filters(img)
+
     return img
 
 
@@ -42,6 +44,9 @@ def quantize_and_fill(name, seed_point, colors=2):
     ImageDraw.floodfill(img, xy=seed_point, value=(255,0,0))
 
     return img
+
+def apply_additional_filters(img):
+    return img.quantize(colors=2, dither=Image.NEAREST, method=Image.MEDIANCUT).convert('RGB')
 
 def get_num_pixels(img):
     num_pixels = img.width * img.height
@@ -60,4 +65,5 @@ def save_img(img, name):
 for port in port_seedpoint_map:
     save_img(fill_image(*port), port[0])
 
+# Do a single image.
 # img = fill_image(*port_seedpoint_map[0])
