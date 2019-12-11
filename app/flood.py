@@ -37,7 +37,7 @@ def quantize_and_fill(name, seed_point, colors=2):
     """
     Load and transform.
     """
-    img = Image.open(f'images/{name}.png')
+    img = Image.open(f'images/{name}')
 
     img = (
         img.quantize(colors=colors, dither=Image.NEAREST, method=Image.MEDIANCUT)
