@@ -1,5 +1,6 @@
 from pathlib import Path
 from subprocess import Popen
+from io import BytesIO
 
 from PIL import Image, ImageDraw, ImageFilter
 
@@ -14,31 +15,34 @@ port_seedpoint_map = (
 )
 
 
-def fill_image(name, seed_point, colors=2):
+def parse_blob(blob):
+    return Image.open(BytesIO(blob))
+
+
+def fill_image(orig_blob, seed_point, colors=2):
     """
     Process image: quantitize and fill, compute histogram,
     redo if the image has been filled poorly, e.g. has too much red.
     Don't go past 9 colour levels for quantitization.
     """
-    print(f'Processing image: {name}')
+    print(f'Processing image...')
 
-    img = quantize_and_fill(name, seed_point, colors)
+    img = parse_blob(orig_blob)
+    img = quantize_and_fill(img, seed_point, colors)
     num_px = get_num_pixels(img)
     r_histo = get_r_histo(img)
 
     if (r_histo[-1] / num_px > 0.9) and colors < 9:
         print(f'Redoing with {colors+1} colors quantization...')
-        img = fill_image(name, seed_point, colors=colors + 1)
+        img = fill_image(orig_blob, seed_point, colors=colors + 1)
 
     return img
 
 
-def quantize_and_fill(name, seed_point, colors=2):
+def quantize_and_fill(img, seed_point, colors=2):
     """
     Load and transform.
     """
-    img = Image.open(f'images/{name}')
-
     img = (
         img.quantize(colors=colors, dither=Image.NEAREST, method=Image.MEDIANCUT)
         .convert('L')
@@ -79,13 +83,14 @@ def save_img(img, name):
     return output
 
 
-def parse_one(port):
+def parse_one(blob, seedpoint, name):
     """
     Parse and save a single image.
     """
-    img = fill_image(*port)
+    img = fill_image(blob, seedpoint)
     img = apply_additional_filters(img)
-    return save_img(img, port[0])
+    return save_img(img, name)
+    # return img
 
 
 def parse_all(port_seedpoint_map):
