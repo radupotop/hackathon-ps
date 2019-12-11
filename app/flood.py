@@ -97,11 +97,12 @@ def parse_geojson(filenames):
         Popen(('potrace', fn[0], '-b', 'geojson'))
 
 
-filenames = parse_all(port_seedpoint_map)
-parse_geojson(filenames)
+if __name__ == '__main__':
+    filenames = parse_all(port_seedpoint_map)
+    parse_geojson(filenames)
 
-# Do a single image.
-# img = fill_image(*port_seedpoint_map[0])
-# img = apply_additional_filters(img)
-# save_img(img, 'test')
-# img.show()
+    # Do a single image.
+    # img = fill_image(*port_seedpoint_map[0])
+    # img = apply_additional_filters(img)
+    # save_img(img, 'test')
+    # img.show()
