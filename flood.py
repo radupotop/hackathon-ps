@@ -57,10 +57,16 @@ def get_r_histo(img):
     return r_histo
 
 def save_img(img, name):
-    filename = f'output/{name}.bmp'
-    print(f'Saving {filename}')
-    img.save(filename)
-    return filename
+    output = (
+        f'output/{name}.bmp',
+        f'output/{name}.png',
+    )
+    print(f'Saving {output}')
+
+    for fn in output:
+        img.save(fn)
+
+    return output
 
 filenames = []
 
@@ -72,7 +78,7 @@ for port in port_seedpoint_map:
 print(filenames)
 
 for fn in filenames:
-    Popen(('potrace', fn, '-b', 'geojson'))
+    Popen(('potrace', fn[0], '-b', 'geojson'))
 
 
 # Do a single image.
