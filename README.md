@@ -23,3 +23,10 @@
 
 
 From the SeedPoint determine the origin of the map (x0, y0 coordinates).
+
+
+## Example CLI calls
+
+    http --timeout 120 http://localhost:5000/ seedpoint==0,0 @images/southampton.png -d -o output/southampton.png
+
+    http --timeout 120 http://localhost:5000/ seedpoint==1000,700 @images/felixstowe.png -d -o output/felixstowe.png
