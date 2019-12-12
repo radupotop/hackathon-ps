@@ -14,16 +14,6 @@ def validate_blob(data: bytes):
     return str(datum).startswith('PNG image')
 
 
-# def save_blob(data: bytes):
-#     """
-#     Save image blob.
-#     """
-#     ts = datetime.utcnow().isoformat()
-#     fp = f'images/{ts}'
-#     Path(fp).write_bytes(data)
-#     return ts
-
-
 def parse_seedpoint(seed):
     return tuple(map(int, seed.split(',')))
 
@@ -38,15 +28,12 @@ def application(request):
         return Response('"Params are rubbish"', status=400, content_type='application/problem+json')
 
     # Save image blob
-    # ts = save_blob(data)
     ts = datetime.utcnow().isoformat()
     parse_one(data, sp, ts)
-    f = Path(f'output/{ts}.png').read_bytes()
+    parsed_file = Path(f'output/{ts}.png').read_bytes()
 
-    return Response(f, mimetype='image/png', content_type='image/png')
-    # return response(environ, start_response)
+    return Response(parsed_file, mimetype='image/png', content_type='image/png')
 
-    # return Response("Hello, World!")
 
 if __name__ == "__main__":
     run_simple("localhost", 5000, application)

@@ -16,6 +16,9 @@ port_seedpoint_map = (
 
 
 def parse_blob(blob):
+    """
+    Open blob as an Image instance.
+    """
     return Image.open(BytesIO(blob))
 
 
@@ -90,21 +93,19 @@ def parse_one(blob, seedpoint, name):
     img = fill_image(blob, seedpoint)
     img = apply_additional_filters(img)
     return save_img(img, name)
-    # return img
 
 
-def parse_all(port_seedpoint_map):
-    return [parse_one(port) for port in port_seedpoint_map]
+# def parse_all(port_seedpoint_map):
+#     return [parse_one(port) for port in port_seedpoint_map]
 
 
-def parse_geojson(filenames):
-    for fn in filenames:
-        Popen(('potrace', fn[0], '-b', 'geojson'))
+def parse_geojson(filename):
+    Popen(('potrace', filename, '-b', 'geojson'))
 
 
-if __name__ == '__main__':
-    filenames = parse_all(port_seedpoint_map)
-    parse_geojson(filenames)
+# if __name__ == '__main__':
+#     filenames = parse_all(port_seedpoint_map)
+#     parse_geojson(filenames)
 
     # Do a single image.
     # img = fill_image(*port_seedpoint_map[0])
