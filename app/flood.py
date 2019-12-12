@@ -28,8 +28,6 @@ def fill_image(orig_blob, seed_point, colors=2):
     redo if the image has been filled poorly, e.g. has too much red.
     Don't go past 9 colour levels for quantitization.
     """
-    print(f'Processing image...')
-
     img = parse_blob(orig_blob)
     img = quantize_and_fill(img, seed_point, colors)
     num_px = get_num_pixels(img)
@@ -90,22 +88,28 @@ def parse_one(blob, seedpoint, name):
     """
     Parse and save a single image.
     """
+    print(f'Processing image: {name}')
     img = fill_image(blob, seedpoint)
     img = apply_additional_filters(img)
     return save_img(img, name)
 
 
-# def parse_all(port_seedpoint_map):
-#     return [parse_one(port) for port in port_seedpoint_map]
+def parse_file(name, seedpoint):
+    blob = Path(f'images/{name}.png').read_bytes()
+    return parse_one(blob, seedpoint, name)
+
+
+def parse_all(port_seedpoint_map):
+    return [parse_file(*port) for port in port_seedpoint_map]
 
 
 def parse_geojson(filename):
     Popen(('potrace', filename, '-b', 'geojson'))
 
 
-# if __name__ == '__main__':
-#     filenames = parse_all(port_seedpoint_map)
-#     parse_geojson(filenames)
+if __name__ == '__main__':
+    parse_all(port_seedpoint_map)
+    # parse_geojson(filenames)
 
     # Do a single image.
     # img = fill_image(*port_seedpoint_map[0])
