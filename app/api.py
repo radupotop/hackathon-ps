@@ -15,7 +15,8 @@ def validate_blob(data: bytes):
 
 
 def parse_seedpoint(seed):
-    return tuple(map(int, seed.split(',')))
+    if seed:
+        return tuple(map(int, seed.split(',')))
 
 
 @Request.application
@@ -32,8 +33,11 @@ def application(request):
     parse_one(data, sp, ts)
     parsed_file = Path(f'output/{ts}.png').read_bytes()
 
+    if not parsed_file:
+        return Response('"No output file found"', status=400, content_type='application/problem+json')
+
     return Response(parsed_file, mimetype='image/png', content_type='image/png')
 
 
 if __name__ == "__main__":
-    run_simple("localhost", 5000, application)
+    run_simple("0.0.0.0", 5000, application)
